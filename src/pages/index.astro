@@ -1,0 +1,367 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Authors from '../components/Authors.astro';
+import VideoGrid from '../components/VideoGrid.astro';
+import Figure from '../components/Figure.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// This helper function reads prompts from `src/demos/prompts` during the build.
+// This part is working correctly.
+function getPromptFromFile(videoFilename: string): string {
+  const match = videoFilename.match(/(?:MultiFrame|V2V)_(\d+)_/);
+  if (!match) return "Prompt not available.";
+  const videoId = match[1];
+
+  // This path correctly points to your prompts inside `src/`
+  const promptPath = path.join(process.cwd(), 'src', 'demos', 'prompts', `${videoId}.txt`);
+
+  try {
+    if (fs.existsSync(promptPath)) {
+      const prompt = fs.readFileSync(promptPath, 'utf-8').trim();
+      return prompt;
+    } else {
+      return `Prompt for ${videoId} not found.`;
+    }
+  } catch (e) {
+    console.error(`Error reading prompt for ${videoId}:`, e);
+    return 'Error loading prompt.'
+  }
+}
+
+function getPromptFromT2VFilename(videoFilename: string): string {
+    const lastDashIndex = videoFilename.lastIndexOf('-');
+    if (lastDashIndex === -1) return videoFilename.replace('.mp4', '').replace(/\\/g, '');
+    let prompt = videoFilename.substring(0, lastDashIndex);
+    prompt = prompt.replace(/\\/g, '');
+    return prompt;
+}
+
+// Image-to-Video demos
+const i2v_video_filenames = [
+    "MultiFrame_00015_epoch=5-step=900.ckpt_20250619_055745.mp4",
+    "MultiFrame_00016_epoch=5-step=900.ckpt_20250619_032326.mp4",
+    "MultiFrame_00046_epoch=5-step=900.ckpt_20250619_032554.mp4",
+    "MultiFrame_00050_epoch=5-step=900.ckpt_20250619_060017.mp4",
+    "MultiFrame_00053_epoch=5-step=900.ckpt_20250619_044332.mp4",
+    "MultiFrame_00056_epoch=5-step=900.ckpt_20250619_032431.mp4",
+    "MultiFrame_00007_epoch=5-step=900.ckpt_20250619_040022.mp4",
+    "MultiFrame_00008_epoch=5-step=900.ckpt_20250619_043753.mp4",
+    "MultiFrame_00063_epoch=5-step=900.ckpt_20250619_043938.mp4"
+];
+// This path will now correctly resolve to `public/demos/...`
+const i2v_video_folder = '/demos/outputs_I2V_first_frames_30steps_no_noise';
+const i2v_videos = i2v_video_filenames.map(file => ({
+    src: `${i2v_video_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+// Start-end frames demos
+const start_end_filenames = [
+    "MultiFrame_00007_epoch=5-step=900.ckpt_20250619_084250.mp4",
+    "MultiFrame_00009_epoch=5-step=900.ckpt_20250619_095952.mp4",
+    "MultiFrame_00016_epoch=5-step=900.ckpt_20250619_080832.mp4",
+    "MultiFrame_00025_epoch=5-step=900.ckpt_20250619_103405.mp4",
+    "MultiFrame_00027_epoch=5-step=900.ckpt_20250619_084549.mp4",
+    "MultiFrame_00030_epoch=5-step=900.ckpt_20250619_104359.mp4",
+];
+// This path will now correctly resolve to `public/demos/...`
+const start_end_folder = '/demos/outputs__multi_frames_dict_keys([0, 20])_30steps_0,0_rm_last_four_frames';
+const start_end_videos = start_end_filenames.map(file => ({
+    src: `${start_end_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+// Start-end frames with noise
+const start_end_noisy_filenames = [
+    'MultiFrame_00003_epoch=5-step=900.ckpt_20250618_233301.mp4',
+    'MultiFrame_00008_epoch=5-step=900.ckpt_20250618_231742.mp4',
+    'MultiFrame_00031_epoch=5-step=900.ckpt_20250618_220752.mp4',
+    'MultiFrame_00048_epoch=5-step=900.ckpt_20250618_232521.mp4',
+    'MultiFrame_00052_epoch=5-step=900.ckpt_20250618_224839.mp4',
+    'MultiFrame_00053_epoch=5-step=900.ckpt_20250618_232850.mp4',
+];
+const start_end_noisy_folder = '/demos/outputs__multi_frames_0,20_30steps_0.3,0.7_rm_last_four_frames';
+const start_end_noisy_videos = start_end_noisy_filenames.map(file => ({
+    src: `${start_end_noisy_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+// Video Extension (13 -> 81 frames)
+const video_ext_13_filenames = [
+    "V2V_00002_epoch=5-step=900.ckpt_20250620_093058.mp4",
+    "V2V_00010_epoch=5-step=900.ckpt_20250620_141133.mp4",
+    "V2V_00038_epoch=5-step=900.ckpt_20250620_093105.mp4",
+    "V2V_00052_epoch=5-step=900.ckpt_20250620_120949.mp4",
+    "V2V_00055_epoch=5-step=900.ckpt_20250620_084934.mp4",
+    "V2V_00059_epoch=5-step=900.ckpt_20250620_112614.mp4",
+];
+const video_ext_13_folder = '/demos/outputs_v2v_[0, 1, 2, 3]_30steps_0,0,0,0';
+const video_ext_13_videos = video_ext_13_filenames.map(file => ({
+    src: `${video_ext_13_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+// Video Extension (41 -> 81 frames)
+const video_ext_41_filenames = [
+    "V2V_00038_epoch=5-step=900.ckpt_20250620_092820.mp4",
+    "V2V_00042_epoch=5-step=900.ckpt_20250620_121118.mp4",
+    "V2V_00045_epoch=5-step=900.ckpt_20250620_134555.mp4",
+    "V2V_00064_epoch=5-step=900.ckpt_20250620_132843.mp4",
+    "V2V_00066_epoch=5-step=900.ckpt_20250620_092535.mp4",
+    "V2V_00068_epoch=5-step=900.ckpt_20250620_104734.mp4",
+];
+const video_ext_41_folder = '/demos/outputs_v2v_[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]_30steps_0,0,0,0,0,0,0,0,0,0,0';
+const video_ext_41_videos = video_ext_41_filenames.map(file => ({
+    src: `${video_ext_41_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+// Text-to-Video
+const t2v_filenames = [
+    "A car changes from golden to white.-0.mp4",
+    "A person is sitting in a chair, then they suddenly get up and start stretching.-2.mp4",
+    "A rabbit with the horns of a goat, hopping energetically while butting through obstacles.-1.mp4",
+    "A whale with the wings of a bat, soaring over the ocean surface under the full moon.-0.mp4",
+    "A dog is on the left of a sofa, then the dog runs to the front of the sofa.-1.mp4",
+    "A person is eating a hot dog.-1.mp4",
+];
+const t2v_folder = '/demos/outputs_Vbench_T2V_50_steps';
+const t2v_videos = t2v_filenames.map(file => ({
+    src: `${t2v_folder}/${file}`,
+    prompt: getPromptFromT2VFilename(file)
+}));
+
+// Start-end frames (multi-frame end condition)
+const start_end_multi_frame_filenames = [
+    'V2V_00011_epoch=5-step=900.ckpt_20250713_042431.mp4',
+    'V2V_00066_epoch=5-step=900.ckpt_20250713_120426.mp4',
+    'V2V_00055_epoch=5-step=900.ckpt_20250713_045905.mp4',
+    'V2V_00004_epoch=5-step=900.ckpt_20250713_015310.mp4',
+    'V2V_00061_epoch=5-step=900.ckpt_20250713_085318.mp4',
+    'V2V_00050_epoch=5-step=900.ckpt_20250713_014422.mp4',
+    'V2V_00048_epoch=5-step=900.ckpt_20250713_121034.mp4',
+    'V2V_00009_epoch=5-step=900.ckpt_20250713_034114.mp4',
+    'V2V_00034_epoch=5-step=900.ckpt_20250713_022429.mp4',
+];
+const start_end_multi_frame_folder = '/demos/outputs_v2v_[0, 20]_30steps_0,0';
+const start_end_multi_frame_videos = start_end_multi_frame_filenames.map(file => ({
+    src: `${start_end_multi_frame_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+// Video Completion/Transition
+const video_transition_filenames = [
+    'V2V_00049_epoch=5-step=900.ckpt_20250713_191620.mp4',  
+    'V2V_00065_epoch=5-step=900.ckpt_20250714_001630.mp4',
+    'V2V_00036_epoch=5-step=900.ckpt_20250713_035750.mp4',
+    'V2V_00067_epoch=5-step=900.ckpt_20250714_005919.mp4',
+    'V2V_00014_epoch=5-step=900.ckpt_20250713_040101.mp4',
+    'V2V_00055_epoch=5-step=900.ckpt_20250713_212454.mp4',
+];
+const video_transition_folder = '/demos/outputs_v2v_[0, 1, 2, 18, 19, 20]_30steps_0,0,0,0,0,0';
+const video_transition_videos = video_transition_filenames.map(file => ({
+    src: `${video_transition_folder}/${file}`,
+    prompt: getPromptFromFile(file)
+}));
+
+
+const abstract = "The rapid advancement of video diffusion models has been hindered by fundamental limitations in temporal modeling, particularly the rigid synchronization of frame evolution imposed by conventional scalar timestep variables. While task-specific adaptations and autoregressive models have sought to address these challenges, they remain constrained by computational inefficiency, catastrophic forgetting, or narrow applicability. In this work, we present Pusa, a groundbreaking paradigm that leverages vectorized timestep adaptation (VTA) to enable fine-grained temporal control within a unified video diffusion framework. Besides, VTA is a non-destructive adaptation, which means it fully preserves the capabilities of the base model. By finetuning the SOTA Wan2.1-T2V-14B model with VTA, we achieve unprecedented efficiency—surpassing the performance of Wan-I2V-14B with ≤ 1/200 of the training cost ($500 vs. ≥ $100,000) and ≤ 1/2500 of the dataset size (4K vs. ≥ 10M samples). Pusa not only sets a new standard for image-to-video (I2V) generation, achieving a VBench-I2V total score of 87.32% (vs. 86.86% of Wan-I2V-14B), but also unlocks many zero-shot multi-task capabilities such as start-end frames and video extension —all without task-specific training. Meanwhile, Pusa can still perform text-to-video generation. Mechanistic analyses reveal that our approach preserves the foundation model’s generative priors while surgically injecting temporal dynamics, avoiding the combinatorial explosion inherent to vectorized timesteps. This work establishes a scalable, efficient, and versatile paradigm for next-generation video synthesis, democratizing high-fidelity video generation for research and industry alike. Code will be open-sourced at https://github.com/Yaofang-Liu/Pusa-VidGen";
+
+const figure1_caption = "Overview of Pusa's performance and efficiency. Specifically, Pusa outperforms Wan-I2V on Vbench-I2V with only &le; 1/2500 dataset, &le; 1/200 training budget, and 1/5 inference steps. Besides, Wan-I2V can only do image-to-video generation, while the same Pusa model has many other capabilities including: start-end frames, video extension, text-to-video, and so on.";
+
+const figure2_caption = "Paradigm comparison among (c) Pusa and (b) Wan-I2V, both support image-to-video (I2V) generation, and are finetuned from a text-to-video model (a) Wan-T2V. As illustrated by the figure (b), Wan-I2V modifies the model with an additional mask mechanism and adds a clip embedding of the condition image to enable I2V capability. However, this is a destructive adaptation of the original model that changes the model's input and internal calculation process, which indicates it cannot fully utilize the pretrained priors of the base model. In contrast, our proposed model, Pusa, we inflate the model's timestep variable from a scalar to a vector, which is a non-destructive adaptation. With this method, Pusa can fully utilize the pretrained priors and use much less resources to learn temporal dynamics. Regarding the I2V task, Pusa achieves unprecedented efficiency, surpassing Wan-I2V with &le; 1/2500 training data, revolutionizing the video diffusion paradigm.";
+---
+
+<Layout title="PUSA V1.0: Surpassing Wan-I2V-14B with $500">
+  <main>
+    <div class="hero">
+      <div class="hero-background">
+        <video id="hero-background-video" autoplay muted playsinline></video>
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="hero-content">
+        <h1 class="title">PUSA V1.0</h1>
+        <h2 class="subtitle">SURPASSING WAN-I2V-14B WITH $500 <br/> BY VECTORIZED TIMESTEP ADAPTATION</h2>
+        
+        <Authors />
+
+        <div class="links">
+          <a href="https://arxiv.org/abs/2410.03160" class="link-button primary">📜 Paper</a>
+          <a href="https://github.com/Yaofang-Liu/Pusa-VidGen" class="link-button">💻 Code</a>
+        </div>
+      </div>
+    </div>
+    
+    <section class="abstract-section">
+      <h3 class="section-title">Abstract</h3>
+      <p class="abstract-text">{abstract}</p>
+    </section>
+
+    <Figure 
+      src="/pusa_benchmark_figure_dark.png"
+      alt="Pusa benchmark results"
+      caption={figure1_caption}
+    />
+
+    <Figure
+      src="/Pusa_teaser1_01.png"
+      alt="Pusa paradigm comparison"
+      caption={figure2_caption}
+    />
+
+    <VideoGrid title="Image-to-Video" videos={i2v_videos} />
+    <VideoGrid title="Start-end Frames" subtitle="Give the start frame and 4 end frames (encoded to one single latent frame) as condition. 81 frames in total." videos={start_end_multi_frame_videos} />
+    <VideoGrid title="Start-End Frames" subtitle="Give the start frame and the end frames as condition. 81 frames in total." videos={start_end_videos} />
+    <VideoGrid title="Start-End Frames" subtitle="Add 30% noise to the first frame and 70% noise to the last frame. " videos={start_end_noisy_videos} />
+    <VideoGrid title="Video Completion/Transition" subtitle="Give 9 start frames (left video) and 12 end frames (right video) as condition. 81 frames in total." videos={video_transition_videos} />
+    <VideoGrid title="Video Extension" subtitle="Give the first 13 frames as condition. 81 frames in total." videos={video_ext_13_videos} />
+    <VideoGrid title="Video Extension" subtitle="Give the first 41 frames as condition. 81 frames in total." videos={video_ext_41_videos} />
+    <VideoGrid title="Text-to-Video" videos={t2v_videos} />
+    <section class="placeholder-section">
+        <p>
+            Novel sampling/training algorithms, video editing,<br />
+            long video generation, and more things to explore ...
+        </p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    padding: 0;
+    /* This was creating a gap above the hero. We'll handle the offset inside the hero content. */
+    /* padding-top: 120px; */ 
+  }
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+  }
+  #hero-background-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(16, 16, 20, 0.6);
+    z-index: -1;
+  }
+  .hero-content {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    position: relative;
+    z-index: 1;
+    /* Add padding to account for the fixed header so content is not obscured */
+    padding-top: 120px; 
+  }
+  .title {
+    font-size: 4.5rem; /* 72px */
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    background: -webkit-linear-gradient(120deg, #fde089, #ff9375);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 500;
+    color: #d4d4d8; /* zinc-300 - made it lighter for better contrast */
+    margin-top: 1rem;
+    line-height: 1.4;
+  }
+  .links {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .link-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    background-color: transparent;
+    color: #f4f4f5; /* zinc-100 */
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+  }
+  .link-button:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .link-button.primary {
+    background-color: white;
+    color: black;
+    border-color: white;
+  }
+  .link-button.primary:hover {
+    background-color: #d4d4d8; /* zinc-300 */
+  }
+  .abstract-section {
+    padding: 3rem 1.5rem;
+    max-width: 80ch;
+    margin: 0 auto;
+    padding-top: 120px; /* Offset for fixed header */
+  }
+  .section-title {
+    font-size: 2.25rem; /* 36px */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -0.025em;
+  }
+  .abstract-text {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.75;
+    color: #d4d4d8; /* zinc-300 */
+    text-align: justify;
+  }
+  .placeholder-section {
+    padding: 4rem 1.5rem;
+    text-align: center;
+    color: #71717a; /* zinc-500 */
+    font-size: 1.75rem; /* 30px */
+    font-weight: 500;
+  }
+</style>
+
+<script define:vars={{ backgroundVideos: i2v_videos }}>
+  const videoElement = document.getElementById('hero-background-video');
+  let currentVideoIndex = 0;
+
+  function playNextVideo() {
+    currentVideoIndex = (currentVideoIndex + 1) % backgroundVideos.length;
+    videoElement.src = backgroundVideos[currentVideoIndex].src;
+    videoElement.play();
+  }
+
+  videoElement.addEventListener('ended', playNextVideo);
+
+  if (backgroundVideos.length > 0) {
+    videoElement.src = backgroundVideos[0].src;
+  }
+</script> 

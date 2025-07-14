@@ -1,0 +1,53 @@
+---
+import VideoCard from './VideoCard.astro';
+
+interface Video {
+  src: string;
+  prompt: string;
+}
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  videos: Video[];
+}
+
+const { title, subtitle, videos } = Astro.props;
+---
+
+<section class="video-grid-section">
+  <h3 class="section-title">{title}</h3>
+  {subtitle && <p class="section-subtitle">{subtitle}</p>}
+  <div class="grid-container">
+    {videos.map(video => (
+      <VideoCard src={video.src} prompt={video.prompt} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .video-grid-section {
+    padding: 3rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: 2.25rem; /* 36px */
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 3rem;
+    letter-spacing: -0.025em;
+  }
+  .section-subtitle {
+    font-size: 1.125rem; /* 18px */
+    text-align: center;
+    color: #a1a1aa; /* zinc-400 */
+    margin-top: -2.5rem;
+    margin-bottom: 3rem;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+</style> 

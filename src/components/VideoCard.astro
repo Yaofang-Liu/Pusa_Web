@@ -1,0 +1,108 @@
+---
+interface Props {
+  src: string;
+  prompt: string;
+}
+
+const { src, prompt } = Astro.props;
+const words = prompt.split(/\s+/);
+const isLongPrompt = words.length > 30;
+const shortPrompt = isLongPrompt ? words.slice(0, 30).join(' ') : prompt;
+---
+
+<div class="card">
+  <div class="video-container">
+    <video
+      src={src}
+      autoplay
+      loop
+      muted
+      playsinline
+      class="video-element"
+    >
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <div class="prompt-container">
+    <p class="prompt-text" data-full-prompt={prompt}>
+      <span class="prompt-content">{shortPrompt}</span>{isLongPrompt && <span class="ellipsis">... </span>}
+      {isLongPrompt && <button type="button" class="read-more">Read More</button>}
+    </p>
+  </div>
+</div>
+
+<style>
+  .card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px 0px rgba(120, 119, 198, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .video-container {
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+  }
+  .video-element {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .prompt-container {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    flex-grow: 1;
+  }
+  .prompt-text {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #a1a1aa; /* zinc-400 */
+    line-height: 1.5;
+  }
+  .read-more {
+    background: none;
+    border: none;
+    color: #fde089; /* A nice highlight color from your theme */
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.25rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: inline;
+    text-decoration: none;
+  }
+
+  .read-more:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  // This script runs on the client to handle the "Read More" functionality.
+  document.querySelectorAll('.card .read-more').forEach(button => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.card');
+      if (!card) return;
+
+      const promptTextElement = card.querySelector('.prompt-text');
+      const promptContentElement = card.querySelector('.prompt-content');
+      const ellipsisElement = card.querySelector('.ellipsis');
+      
+      if(!promptTextElement || !promptContentElement) return;
+
+      const fullPrompt = promptTextElement.dataset.fullPrompt;
+      
+      promptContentElement.textContent = fullPrompt;
+      if (ellipsisElement) ellipsisElement.style.display = 'none';
+      button.style.display = 'none';
+    });
+  });
+</script> 

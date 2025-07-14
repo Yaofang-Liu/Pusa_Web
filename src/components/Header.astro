@@ -1,0 +1,60 @@
+---
+---
+<header>
+  <nav>
+    <div class="logo">
+      <a href="/">
+        <img src="/icon.png" alt="Pusa Logo" class="logo-icon"/>
+        PUSA
+      </a>
+    </div>
+    <div class="links">
+      <a href="https://arxiv.org/abs/2410.03160" target="_blank" rel="noopener noreferrer">Paper</a>
+      <a href="https://github.com/Yaofang-Liu/Pusa-VidGen" target="_blank" rel="noopener noreferrer">Code</a>
+      <a href="https://huggingface.co/RaphaelLiu/Pusa-V0.5" target="_blank" rel="noopener noreferrer">Model Hub</a>
+    </div>
+  </nav>
+</header>
+<style>
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    background: rgba(13, 13, 15, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+  }
+  nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .links a {
+    color: #a1a1aa; /* zinc-400 */
+    text-decoration: none;
+    margin-left: 1.5rem;
+    transition: color 0.2s ease;
+    font-size: 0.9rem;
+  }
+  .links a:hover {
+    color: white;
+  }
+</style> 
