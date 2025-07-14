@@ -50,9 +50,9 @@ const i2v_video_filenames = [
     "MultiFrame_00063_epoch=5-step=900.ckpt_20250619_043938.mp4"
 ];
 // This path will now correctly resolve to `public/demos/...`
-const i2v_video_folder = '/demos/outputs_I2V_first_frames_30steps_no_noise';
+const i2v_video_folder = 'demos/outputs_I2V_first_frames_30steps_no_noise';
 const i2v_videos = i2v_video_filenames.map(file => ({
-    src: `${i2v_video_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${i2v_video_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -66,9 +66,9 @@ const start_end_filenames = [
     "MultiFrame_00030_epoch=5-step=900.ckpt_20250619_104359.mp4",
 ];
 // This path will now correctly resolve to `public/demos/...`
-const start_end_folder = '/demos/outputs__multi_frames_dict_keys([0, 20])_30steps_0,0_rm_last_four_frames';
+const start_end_folder = 'demos/outputs__multi_frames_dict_keys([0, 20])_30steps_0,0_rm_last_four_frames';
 const start_end_videos = start_end_filenames.map(file => ({
-    src: `${start_end_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${start_end_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -81,9 +81,9 @@ const start_end_noisy_filenames = [
     'MultiFrame_00052_epoch=5-step=900.ckpt_20250618_224839.mp4',
     'MultiFrame_00053_epoch=5-step=900.ckpt_20250618_232850.mp4',
 ];
-const start_end_noisy_folder = '/demos/outputs__multi_frames_0,20_30steps_0.3,0.7_rm_last_four_frames';
+const start_end_noisy_folder = 'demos/outputs__multi_frames_0,20_30steps_0.3,0.7_rm_last_four_frames';
 const start_end_noisy_videos = start_end_noisy_filenames.map(file => ({
-    src: `${start_end_noisy_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${start_end_noisy_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -96,9 +96,9 @@ const video_ext_13_filenames = [
     "V2V_00055_epoch=5-step=900.ckpt_20250620_084934.mp4",
     "V2V_00059_epoch=5-step=900.ckpt_20250620_112614.mp4",
 ];
-const video_ext_13_folder = '/demos/outputs_v2v_[0, 1, 2, 3]_30steps_0,0,0,0';
+const video_ext_13_folder = 'demos/outputs_v2v_[0, 1, 2, 3]_30steps_0,0,0,0';
 const video_ext_13_videos = video_ext_13_filenames.map(file => ({
-    src: `${video_ext_13_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${video_ext_13_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -111,9 +111,9 @@ const video_ext_41_filenames = [
     "V2V_00066_epoch=5-step=900.ckpt_20250620_092535.mp4",
     "V2V_00068_epoch=5-step=900.ckpt_20250620_104734.mp4",
 ];
-const video_ext_41_folder = '/demos/outputs_v2v_[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]_30steps_0,0,0,0,0,0,0,0,0,0,0';
+const video_ext_41_folder = 'demos/outputs_v2v_[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]_30steps_0,0,0,0,0,0,0,0,0,0,0';
 const video_ext_41_videos = video_ext_41_filenames.map(file => ({
-    src: `${video_ext_41_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${video_ext_41_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -126,9 +126,9 @@ const t2v_filenames = [
     "A dog is on the left of a sofa, then the dog runs to the front of the sofa.-1.mp4",
     "A person is eating a hot dog.-1.mp4",
 ];
-const t2v_folder = '/demos/outputs_Vbench_T2V_50_steps';
+const t2v_folder = 'demos/outputs_Vbench_T2V_50_steps';
 const t2v_videos = t2v_filenames.map(file => ({
-    src: `${t2v_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${t2v_folder}/${file}`,
     prompt: getPromptFromT2VFilename(file)
 }));
 
@@ -144,9 +144,9 @@ const start_end_multi_frame_filenames = [
     'V2V_00009_epoch=5-step=900.ckpt_20250713_034114.mp4',
     'V2V_00034_epoch=5-step=900.ckpt_20250713_022429.mp4',
 ];
-const start_end_multi_frame_folder = '/demos/outputs_v2v_[0, 20]_30steps_0,0';
+const start_end_multi_frame_folder = 'demos/outputs_v2v_[0, 20]_30steps_0,0';
 const start_end_multi_frame_videos = start_end_multi_frame_filenames.map(file => ({
-    src: `${start_end_multi_frame_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${start_end_multi_frame_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -159,9 +159,9 @@ const video_transition_filenames = [
     'V2V_00014_epoch=5-step=900.ckpt_20250713_040101.mp4',
     'V2V_00055_epoch=5-step=900.ckpt_20250713_212454.mp4',
 ];
-const video_transition_folder = '/demos/outputs_v2v_[0, 1, 2, 18, 19, 20]_30steps_0,0,0,0,0,0';
+const video_transition_folder = 'demos/outputs_v2v_[0, 1, 2, 18, 19, 20]_30steps_0,0,0,0,0,0';
 const video_transition_videos = video_transition_filenames.map(file => ({
-    src: `${video_transition_folder}/${file}`,
+    src: `${import.meta.env.BASE_URL}${video_transition_folder}/${file}`,
     prompt: getPromptFromFile(file)
 }));
 
@@ -199,13 +199,13 @@ const figure2_caption = "Paradigm comparison among (c) Pusa and (b) Wan-I2V, bot
     </section>
 
     <Figure 
-      src="/pusa_benchmark_figure_dark.png"
+      src="pusa_benchmark_figure_dark.png"
       alt="Pusa benchmark results"
       caption={figure1_caption}
     />
 
     <Figure
-      src="/Pusa_teaser1_01.png"
+      src="Pusa_teaser1_01.png"
       alt="Pusa paradigm comparison"
       caption={figure2_caption}
     />
