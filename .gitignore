@@ -17,4 +17,4 @@ pnpm-debug.log*
 !.env.example
 
 # IDE / Editor folders
-.vscode 
+.vscode
