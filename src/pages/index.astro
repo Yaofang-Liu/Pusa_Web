@@ -173,7 +173,7 @@ const figure1_caption = "Overview of Pusa's performance and efficiency. Specific
 const figure2_caption = "Paradigm comparison among (c) Pusa and (b) Wan-I2V, both support image-to-video (I2V) generation, and are finetuned from a text-to-video model (a) Wan-T2V. As illustrated by the figure (b), Wan-I2V modifies the model with an additional mask mechanism and adds a clip embedding of the condition image to enable I2V capability. However, this is a destructive adaptation of the original model that changes the model's input and internal calculation process, which indicates it cannot fully utilize the pretrained priors of the base model. In contrast, our proposed model, Pusa, we inflate the model's timestep variable from a scalar to a vector, which is a non-destructive adaptation. With this method, Pusa can fully utilize the pretrained priors and use much less resources to learn temporal dynamics. Regarding the I2V task, Pusa achieves unprecedented efficiency, surpassing Wan-I2V with &le; 1/2500 training data, revolutionizing the video diffusion paradigm.";
 ---
 
-<Layout title="PUSA V1.0: Surpassing Wan-I2V-14B with $500">
+<Layout title="PUSA V1.0: Surpassing Wan-I2V-14B with $500 Training Cost">
   <main>
     <div class="hero">
       <div class="hero-background">
@@ -182,20 +182,23 @@ const figure2_caption = "Paradigm comparison among (c) Pusa and (b) Wan-I2V, bot
       </div>
       <div class="hero-content">
         <h1 class="title">PUSA V1.0</h1>
-        <h2 class="subtitle">SURPASSING WAN-I2V-14B WITH $500 <br/> BY VECTORIZED TIMESTEP ADAPTATION</h2>
+        <h2 class="subtitle">SURPASSING WAN-I2V-14B WITH $500 TRAINING COST <br/> BY VECTORIZED TIMESTEP ADAPTATION</h2>
         
         <Authors />
 
         <div class="links">
           <a href="https://arxiv.org/abs/2410.03160" class="link-button primary">📜 Paper</a>
+          <a href="https://github.com/Yaofang-Liu/Pusa-VidGen/blob/e99c3dcf866789a2db7fbe2686888ec398076a82/PusaV1/PusaV1.0_Report.pdf" class="link-button">📄 Technical Report</a>
           <a href="https://github.com/Yaofang-Liu/Pusa-VidGen" class="link-button">💻 Code</a>
+          <a href="https://huggingface.co/RaphaelLiu/PusaV1" class="link-button">🤗 Model</a>
+          <a href="https://huggingface.co/datasets/RaphaelLiu/PusaV1_training" class="link-button">📊 Dataset</a>
         </div>
       </div>
     </div>
     
     <section class="abstract-section">
       <h3 class="section-title">Abstract</h3>
-      <p class="abstract-text">{abstract}</p>
+      <p class="abstract-text" set:html={abstract}></p>
     </section>
 
     <Figure 
@@ -339,6 +342,10 @@ const figure2_caption = "Paradigm comparison among (c) Pusa and (b) Wan-I2V, bot
     line-height: 1.75;
     color: #d4d4d8; /* zinc-300 */
     text-align: justify;
+  }
+  .abstract-text :global(.footnote) {
+    font-size: 0.9em;
+    color: #a1a1aa; /* zinc-400 */
   }
   .placeholder-section {
     padding: 4rem 1.5rem;
